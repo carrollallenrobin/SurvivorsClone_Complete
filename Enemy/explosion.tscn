@@ -43,7 +43,6 @@ _data = {
 }
 
 [node name="Explosion" type="Sprite2D"]
-z_index = 1
 texture = ExtResource("1_xvhqw")
 hframes = 4
 vframes = 4

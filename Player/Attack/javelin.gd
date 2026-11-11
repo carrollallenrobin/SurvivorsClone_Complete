@@ -42,7 +42,7 @@ func update_javelin():
 			knockback_amount = 100
 			paths = 1
 			attack_size = 1.0 * (1 + player.spell_size)
-			attack_speed = 5.0 * (1-player.spell_cooldown)
+			attack_speed = 5.0 * (1 - player.spell_cooldown)
 		2:
 			hp = 9999
 			speed = 200.0
@@ -50,7 +50,7 @@ func update_javelin():
 			knockback_amount = 100
 			paths = 2
 			attack_size = 1.0 * (1 + player.spell_size)
-			attack_speed = 5.0 * (1-player.spell_cooldown)
+			attack_speed = 5.0 * (1 - player.spell_cooldown)
 		3:
 			hp = 9999
 			speed = 200.0
@@ -58,7 +58,7 @@ func update_javelin():
 			knockback_amount = 100
 			paths = 3
 			attack_size = 1.0 * (1 + player.spell_size)
-			attack_speed = 5.0 * (1-player.spell_cooldown)
+			attack_speed = 5.0 * (1 - player.spell_cooldown)
 		4:
 			hp = 9999
 			speed = 200.0
@@ -66,9 +66,9 @@ func update_javelin():
 			knockback_amount = 120
 			paths = 3
 			attack_size = 1.0 * (1 + player.spell_size)
-			attack_speed = 5.0 * (1-player.spell_cooldown)
-			
-	
+			attack_speed = 5.0 * (1 - player.spell_cooldown)
+
+	speed *= 1.0 + player.spell_attack_speed
 	scale = Vector2(1.0,1.0) * attack_size
 	attackTimer.wait_time = attack_speed
 
@@ -90,7 +90,7 @@ func add_paths():
 	target_array.clear()
 	var counter = 0
 	while counter < paths:
-		var new_path = player.get_random_target()
+		var new_path = player.get_nearest_target()
 		target_array.append(new_path)
 		counter += 1
 	enable_attack(true)

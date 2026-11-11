@@ -30,12 +30,12 @@ var armor = 0
 var speed = 0
 var spell_cooldown = 0
 var spell_size = 0
-var additional_attacks = 0
+var spell_attack_speed = 0
 
 #IceSpear
 var icespear_ammo = 0
 var icespear_baseammo = 0
-var icespear_attackspeed = 1.5
+var icespear_attackspeed = 1.0
 var icespear_level = 0
 
 #Tornado
@@ -109,11 +109,11 @@ func movement():
 
 func attack():
 	if icespear_level > 0:
-		iceSpearTimer.wait_time = icespear_attackspeed * (1-spell_cooldown)
+		iceSpearTimer.wait_time = icespear_attackspeed * (1 - spell_cooldown)
 		if iceSpearTimer.is_stopped():
 			iceSpearTimer.start()
 	if tornado_level > 0:
-		tornadoTimer.wait_time = tornado_attackspeed * (1-spell_cooldown)
+		tornadoTimer.wait_time = tornado_attackspeed * (1 - spell_cooldown)
 		if tornadoTimer.is_stopped():
 			tornadoTimer.start()
 	if javelin_level > 0:
@@ -127,7 +127,7 @@ func _on_hurt_box_hurt(damage, _angle, _knockback):
 		death()
 
 func _on_ice_spear_timer_timeout():
-	icespear_ammo += icespear_baseammo + additional_attacks
+	icespear_ammo += icespear_baseammo
 	iceSpearAttackTimer.start()
 
 
@@ -135,7 +135,6 @@ func _on_ice_spear_attack_timer_timeout():
 	if icespear_ammo > 0:
 		var icespear_attack = iceSpear.instantiate()
 		icespear_attack.position = position
-		icespear_attack.target = get_random_target()
 		icespear_attack.level = icespear_level
 		add_child(icespear_attack)
 		icespear_ammo -= 1
@@ -145,7 +144,7 @@ func _on_ice_spear_attack_timer_timeout():
 			iceSpearAttackTimer.stop()
 
 func _on_tornado_timer_timeout():
-	tornado_ammo += tornado_baseammo + additional_attacks
+	tornado_ammo += tornado_baseammo
 	tornadoAttackTimer.start()
 
 func _on_tornado_attack_timer_timeout():
@@ -163,7 +162,7 @@ func _on_tornado_attack_timer_timeout():
 
 func spawn_javelin():
 	var get_javelin_total = javelinBase.get_child_count()
-	var calc_spawns = (javelin_ammo + additional_attacks) - get_javelin_total
+	var calc_spawns = javelin_ammo - get_javelin_total
 	while calc_spawns > 0:
 		var javelin_spawn = javelin.instantiate()
 		javelin_spawn.global_position = global_position
@@ -175,11 +174,27 @@ func spawn_javelin():
 		if i.has_method("update_javelin"):
 			i.update_javelin()
 
-func get_random_target():
-	if enemy_close.size() > 0:
-		return enemy_close.pick_random().global_position
-	else:
-		return Vector2.UP
+func get_nearest_enemy():
+	var nearest_enemy = null
+	var nearest_distance_squared = INF
+	
+	for enemy in enemy_close:
+		if not is_instance_valid(enemy):
+			continue
+		
+		var distance_squared = global_position.distance_squared_to(enemy.global_position)
+		if distance_squared < nearest_distance_squared:
+			nearest_distance_squared = distance_squared
+			nearest_enemy = enemy
+	
+	return nearest_enemy
+
+func get_nearest_target():
+	var nearest_enemy = get_nearest_enemy()
+	if nearest_enemy != null:
+		return nearest_enemy.global_position
+	
+	return global_position + Vector2.UP * 100.0
 
 
 func _on_enemy_detection_area_body_entered(body):
@@ -253,12 +268,13 @@ func upgrade_character(upgrade):
 			icespear_baseammo += 1
 		"icespear2":
 			icespear_level = 2
-			icespear_baseammo += 1
+			icespear_attackspeed *= 0.8
 		"icespear3":
 			icespear_level = 3
+			icespear_attackspeed *= 0.8
 		"icespear4":
 			icespear_level = 4
-			icespear_baseammo += 2
+			icespear_attackspeed *= 0.8
 		"tornado1":
 			tornado_level = 1
 			tornado_baseammo += 1
@@ -289,7 +305,7 @@ func upgrade_character(upgrade):
 		"scroll1","scroll2","scroll3","scroll4":
 			spell_cooldown += 0.05
 		"ring1","ring2":
-			additional_attacks += 1
+			spell_attack_speed += 0.20
 		"food":
 			hp += 20
 			hp = clamp(hp,0,maxhp)

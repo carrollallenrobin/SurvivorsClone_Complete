@@ -1,6 +1,7 @@
-[gd_scene load_steps=21 format=3 uid="uid://du6qbgqucaqov"]
+[gd_scene load_steps=22 format=3 uid="uid://du6qbgqucaqov"]
 
-[ext_resource type="Texture2D" uid="uid://b6umklllf2jsl" path="res://Textures/dirt_full_new.png" id="1_3v41d"]
+[ext_resource type="Texture2D" path="res://Textures/dirt_full_hd.png" id="1_3v41d"]
+[ext_resource type="Script" path="res://World/repeating_background.gd" id="2_background"]
 [ext_resource type="PackedScene" uid="uid://dncgepmkc4jf4" path="res://Player/player.tscn" id="2_40uwv"]
 [ext_resource type="PackedScene" uid="uid://ba2claihwes2y" path="res://Utility/enemy_spawner.tscn" id="3_p01g4"]
 [ext_resource type="PackedScene" uid="uid://gvm5jcbbgwdv" path="res://Enemy/enemy_kobold_weak.tscn" id="4_ee8bm"]
@@ -87,13 +88,19 @@ enemy_spawn_delay = 0
 [node name="World" type="Node2D"]
 
 [node name="Background" type="Sprite2D" parent="."]
+z_index = -100
 texture_filter = 2
 texture_repeat = 2
+scale = Vector2(0.5, 0.5)
 texture = ExtResource("1_3v41d")
 region_enabled = true
-region_rect = Rect2(-4000, -4000, 4000, 4000)
+region_rect = Rect2(-1600, -960, 3200, 1920)
+script = ExtResource("2_background")
 
-[node name="Player" parent="." instance=ExtResource("2_40uwv")]
+[node name="Actors" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Player" parent="Actors" instance=ExtResource("2_40uwv")]
 
 [node name="EnemySpawner" parent="." instance=ExtResource("3_p01g4")]
 spawns = Array[ExtResource("5_jj7s8")]([SubResource("Resource_03m25"), SubResource("Resource_ij20a"), SubResource("Resource_68oxv"), SubResource("Resource_l8y0x"), SubResource("Resource_daq1w"), SubResource("Resource_0gpiy"), SubResource("Resource_4teun"), SubResource("Resource_rx6id"), SubResource("Resource_t2np8")])
@@ -107,4 +114,4 @@ volume_db = -15.0
 autoplay = true
 script = ExtResource("11_ovtx6")
 
-[connection signal="playerdeath" from="Player" to="snd_Music" method="_on_player_playerdeath"]
+[connection signal="playerdeath" from="Actors/Player" to="snd_Music" method="_on_player_playerdeath"]

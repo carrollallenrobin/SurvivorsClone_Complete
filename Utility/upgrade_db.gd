@@ -5,33 +5,33 @@ const ICON_PATH = "res://Textures/Items/Upgrades/"
 const WEAPON_PATH = "res://Textures/Items/Weapons/"
 const UPGRADES = {
 	"icespear1": {
-		"icon": WEAPON_PATH + "ice_spear.png",
-		"displayname": "Ice Spear",
-		"details": "A spear of ice is thrown at a random enemy",
+		"icon": WEAPON_PATH + "magic_flying_sword.png",
+		"displayname": "Flying Sword",
+		"details": "A magic sword circles the character once while drifting outward, then locks the nearest enemy on the far side, at a counterclockwise angle of at least 90 and less than 180 degrees, and flies a parabola toward it",
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "weapon"
 	},
 	"icespear2": {
-		"icon": WEAPON_PATH + "ice_spear.png",
-		"displayname": "Ice Spear",
-		"details": "An addition Ice Spear is thrown",
+		"icon": WEAPON_PATH + "magic_flying_sword.png",
+		"displayname": "Flying Sword",
+		"details": "Flying Sword attack interval is reduced by 20%",
 		"level": "Level: 2",
 		"prerequisite": ["icespear1"],
 		"type": "weapon"
 	},
 	"icespear3": {
-		"icon": WEAPON_PATH + "ice_spear.png",
-		"displayname": "Ice Spear",
-		"details": "Ice Spears now pass through another enemy and do + 3 damage",
+		"icon": WEAPON_PATH + "magic_flying_sword.png",
+		"displayname": "Flying Sword",
+		"details": "Flying Sword attack interval is reduced by another 20%",
 		"level": "Level: 3",
 		"prerequisite": ["icespear2"],
 		"type": "weapon"
 	},
 	"icespear4": {
-		"icon": WEAPON_PATH + "ice_spear.png",
-		"displayname": "Ice Spear",
-		"details": "An additional 2 Ice Spears are thrown",
+		"icon": WEAPON_PATH + "magic_flying_sword.png",
+		"displayname": "Flying Sword",
+		"details": "Flying Sword attack interval is reduced by another 20%",
 		"level": "Level: 4",
 		"prerequisite": ["icespear3"],
 		"type": "weapon"
@@ -71,7 +71,7 @@ const UPGRADES = {
 	"tornado1": {
 		"icon": WEAPON_PATH + "tornado.png",
 		"displayname": "Tornado",
-		"details": "A tornado is created and random heads somewhere in the players direction",
+		"details": "A tornado circles the character counterclockwise while drifting outward",
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "weapon"
@@ -231,7 +231,7 @@ const UPGRADES = {
 	"ring1": {
 		"icon": ICON_PATH + "urand_mage.png",
 		"displayname": "Ring",
-		"details": "Your spells now spawn 1 more additional attack",
+		"details": "Increases the flight speed of spells by 20%",
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "upgrade"
@@ -239,7 +239,7 @@ const UPGRADES = {
 	"ring2": {
 		"icon": ICON_PATH + "urand_mage.png",
 		"displayname": "Ring",
-		"details": "Your spells now spawn an additional attack",
+		"details": "Increases the flight speed of spells by an additional 20%",
 		"level": "Level: 2",
 		"prerequisite": ["ring1"],
 		"type": "upgrade"
@@ -253,4 +253,3 @@ const UPGRADES = {
 		"type": "item"
 	}
 }
-

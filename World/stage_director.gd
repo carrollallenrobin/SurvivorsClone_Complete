@@ -113,14 +113,14 @@ func _upgrades_for(index) -> Array[String]:
 func _spawns_for(index):
 	var list: Array[Spawn_info] = []
 	if index <= 1:
-		list.append(_info(0, 119, WEAK, 1, 1))
-		list.append(_info(120, 599, WEAK, 1, 0))
-		list.append(_info(300, 449, STRONG, 1, 3))
-		list.append(_info(450, 599, STRONG, 1, 1))
+		list.append(_info(0, 119, WEAK, 5, 1))
+		list.append(_info(120, 599, WEAK, 5, 0))
+		list.append(_info(300, 449, STRONG, 5, 3))
+		list.append(_info(450, 599, STRONG, 5, 1))
 	else:
-		list.append(_info(0, 299, CYCLOPS, 1, 2))
-		list.append(_info(300, 599, CYCLOPS, 1, 1))
-		list.append(_info(300, 599, JUGGERNAUT, 1, 9))
+		list.append(_info(0, 299, CYCLOPS, 5, 2))
+		list.append(_info(300, 599, CYCLOPS, 5, 1))
+		list.append(_info(300, 599, JUGGERNAUT, 5, 9))
 	return list
 
 func _info(time_start, time_end, enemy, enemy_num, enemy_spawn_delay):

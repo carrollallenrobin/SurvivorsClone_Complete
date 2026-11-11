@@ -59,7 +59,8 @@ var enemy_close = []
 
 
 @onready var sprite = $Sprite2D
-@onready var walkTimer = get_node("%walkTimer")
+var run_frame = 0
+var run_anim_time = 0.0
 
 #GUI
 @onready var expBar = get_node("%ExperienceBar")
@@ -94,9 +95,9 @@ func _ready():
 	_on_hurt_box_hurt(0,0,0)
 
 func _physics_process(delta):
-	movement()
+	movement(delta)
 
-func movement():
+func movement(delta):
 	var x_mov = Input.get_action_strength("right") - Input.get_action_strength("left")
 	var y_mov = Input.get_action_strength("down") - Input.get_action_strength("up")
 	var mov = Vector2(x_mov,y_mov)
@@ -107,12 +108,14 @@ func movement():
 
 	if mov != Vector2.ZERO:
 		last_movement = mov
-		if walkTimer.is_stopped():
-			if sprite.frame >= sprite.hframes - 1:
-				sprite.frame = 0
-			else:
-				sprite.frame += 1
-			walkTimer.start()
+		if sprite.hframes > 1:
+			run_anim_time += delta
+			if run_anim_time >= 0.1:
+				run_anim_time = 0.0
+				run_frame = (run_frame + 1) % (sprite.hframes - 1)
+			sprite.frame = run_frame + 1
+	elif sprite.hframes > 1:
+		sprite.frame = 0
 	
 	velocity = mov.normalized()*movement_speed
 	move_and_slide()
@@ -156,7 +159,7 @@ func _spawn_flying_sword():
 	add_child(icespear_attack)
 	icespear_ammo -= 1
 	sword_spawned_count += 1
-	if sword_spawned_count % 20 == 0:
+	if sword_spawned_count % 50 == 0:
 		_pause_sword_spawning()
 		return
 	if icespear_ammo > 0:
@@ -169,7 +172,7 @@ func _pause_sword_spawning():
 	sword_batch_paused = true
 	iceSpearTimer.stop()
 	iceSpearAttackTimer.stop()
-	get_tree().create_timer(10.0).timeout.connect(_resume_sword_spawning)
+	get_tree().create_timer(5.0).timeout.connect(_resume_sword_spawning)
 
 func _resume_sword_spawning():
 	sword_batch_paused = false

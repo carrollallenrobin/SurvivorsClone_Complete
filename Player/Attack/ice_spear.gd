@@ -18,9 +18,9 @@ var flight_duration = 1.0
 var velocity = Vector2.ZERO
 var preparing_launch = true
 var orbit_angle = 0.0
-var orbit_radius = 40.0
+var orbit_radius = 10.0
 var spiral_outward_ratio = 0.32
-var intro_outward_ratio = 0.4
+var intro_outward_ratio = 0.8
 var intro_active = true
 var intro_spiraling = false
 var intro_bearing = 0.0
@@ -109,9 +109,9 @@ func orbit_before_lock(delta):
 	var tangential_speed = speed / scale
 	var angular_speed = tangential_speed / max(intro_radius, 1.0)
 	var step = angular_speed * delta
-	if intro_swept + step >= TAU:
-		var fraction = (TAU - intro_swept) / max(step, 0.0001)
-		step = TAU - intro_swept
+	if intro_swept + step >= PI:
+		var fraction = (PI - intro_swept) / max(step, 0.0001)
+		step = PI - intro_swept
 		delta *= fraction
 		intro_active = false
 	intro_swept += step
@@ -296,6 +296,10 @@ func start_curve():
 	flight_duration = max(target_distance / speed, 0.2)
 	curve_progress = 0.0
 	face(incoming)
+
+func _on_timer_timeout():
+	emit_signal("remove_from_array", self)
+	queue_free()
 
 func enemy_hit(charge = 1):
 	hp -= charge

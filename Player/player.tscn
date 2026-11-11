@@ -59,7 +59,7 @@ shape = SubResource("RectangleShape2D_yfi4i")
 
 [node name="IceSpearTimer" type="Timer" parent="Attack"]
 unique_name_in_owner = true
-wait_time = 1.0
+wait_time = 0.125
 
 [node name="IceSpearAttackTimer" type="Timer" parent="Attack/IceSpearTimer"]
 unique_name_in_owner = true
@@ -209,6 +209,50 @@ offset_right = 140.0
 offset_bottom = 230.0
 text = "Menu"
 
+[node name="ClearPanel" type="Panel" parent="GUILayer/GUI"]
+unique_name_in_owner = true
+process_mode = 2
+visible = false
+layout_mode = 0
+offset_left = 220.0
+offset_top = -220.0
+offset_right = 420.0
+offset_bottom = -40.0
+
+[node name="lbl_Clear" type="Label" parent="GUILayer/GUI/ClearPanel"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 10.0
+offset_top = 16.0
+offset_right = 190.0
+offset_bottom = 96.0
+theme_override_fonts/font = ExtResource("6_okx7u")
+text = "Stage Clear"
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+
+[node name="btn_enter" parent="GUILayer/GUI/ClearPanel" instance=ExtResource("12_i8esf")]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 60.0
+offset_top = 112.0
+offset_right = 140.0
+offset_bottom = 142.0
+text = "Enter"
+
+[node name="lblStage" type="Label" parent="GUILayer/GUI"]
+unique_name_in_owner = true
+layout_mode = 0
+offset_left = 250.0
+offset_top = 2.0
+offset_right = 390.0
+offset_bottom = 20.0
+theme_override_fonts/font = ExtResource("6_okx7u")
+theme_override_font_sizes/font_size = 12
+text = "Stage 1"
+horizontal_alignment = 1
+
 [node name="lblTimer" type="Label" parent="GUILayer/GUI"]
 unique_name_in_owner = true
 layout_mode = 0
@@ -250,5 +294,6 @@ columns = 10
 [connection signal="area_entered" from="GrabArea" to="." method="_on_grab_area_area_entered"]
 [connection signal="area_entered" from="CollectArea" to="." method="_on_collect_area_area_entered"]
 [connection signal="click_end" from="GUILayer/GUI/DeathPanel/btn_menu" to="." method="_on_btn_menu_click_end"]
+[connection signal="click_end" from="GUILayer/GUI/ClearPanel/btn_enter" to="." method="_on_btn_enter_click_end"]
 
 [editable path="HurtBox"]

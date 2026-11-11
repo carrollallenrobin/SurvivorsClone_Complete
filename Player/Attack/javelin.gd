@@ -68,6 +68,9 @@ func update_javelin():
 			attack_size = 1.0 * (1 + player.spell_size)
 			attack_speed = 5.0 * (1 - player.spell_cooldown)
 
+	if level >= 4:
+		damage += player.javelin_bonus_damage
+		knockback_amount += player.javelin_bonus_knockback
 	speed *= 1.0 + player.spell_attack_speed
 	scale = Vector2(1.0,1.0) * attack_size
 	attackTimer.wait_time = attack_speed

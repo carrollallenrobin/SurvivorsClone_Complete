@@ -20,27 +20,30 @@ var preparing_launch = true
 var orbit_angle = 0.0
 var orbit_radius = 40.0
 var spiral_outward_ratio = 0.32
-var intro_outward_ratio = 0.2
+var intro_outward_ratio = 0.4
 var intro_active = true
 var intro_spiraling = false
 var intro_bearing = 0.0
 var intro_radius = 0.0
 var intro_swept = 0.0
+var orbit_center = Vector2.ZERO
+var lock_center = Vector2.ZERO
+var spawn_direction = Vector2.UP
 
 @onready var player = get_tree().get_first_node_in_group("player")
 signal remove_from_array(object)
 
 func _ready():
 	speed *= 1.0 + player.spell_attack_speed
-	var spawn_direction = player.last_movement
 	if spawn_direction.length_squared() <= 0.001:
 		spawn_direction = Vector2.UP
 	spawn_direction = spawn_direction.normalized()
+	orbit_center = player.global_position
 	intro_bearing = spawn_direction.angle()
 	intro_radius = orbit_radius
 	intro_spiraling = true
 	orbit_angle = intro_bearing
-	global_position = player.global_position + spawn_direction * orbit_radius
+	global_position = orbit_center + spawn_direction * orbit_radius
 	var tangent = Vector2.RIGHT.rotated(intro_bearing - PI / 2.0)
 	velocity = (tangent + spawn_direction * intro_outward_ratio).normalized() * speed
 	face(velocity)
@@ -69,7 +72,7 @@ func _physics_process(delta):
 		return
 	
 	curve_end = target.global_position
-	if is_radially_between(target.global_position) or curve_has_no_bulge():
+	if is_radially_between(target.global_position, lock_center) or curve_has_no_bulge():
 		target = null
 		glide(delta)
 		return
@@ -77,7 +80,7 @@ func _physics_process(delta):
 	curve_progress = advance_curve(curve_progress, speed * delta)
 	var next_position = sample_curve(curve_progress)
 	
-	if crosses_left_to_right(global_position, next_position):
+	if crosses_left_to_right(global_position, next_position, lock_center):
 		target = null
 		glide(delta)
 		return
@@ -88,7 +91,7 @@ func _physics_process(delta):
 		switch_target_or_glide(delta)
 
 func orbit_before_lock(delta):
-	var center = player.global_position
+	var center = orbit_center
 	if not intro_spiraling:
 		if global_position.distance_squared_to(center) < 64.0:
 			global_position += velocity * delta
@@ -143,9 +146,9 @@ func acquire_target():
 		var counterclockwise_angle = fposmod(sword_angle - enemy_offset.angle(), TAU)
 		if counterclockwise_angle < PI / 2.0 or counterclockwise_angle >= PI:
 			continue
-		if is_radially_between(enemy.global_position):
+		if is_radially_between(enemy.global_position, center):
 			continue
-		if crosses_left_to_right(global_position, enemy.global_position):
+		if crosses_left_to_right(global_position, enemy.global_position, center):
 			continue
 		
 		var distance_squared = center.distance_squared_to(enemy.global_position)
@@ -153,10 +156,11 @@ func acquire_target():
 			best_distance_squared = distance_squared
 			best_enemy = enemy
 	
+	if is_instance_valid(best_enemy):
+		lock_center = center
 	return best_enemy
 
-func is_radially_between(enemy_position):
-	var center = player.global_position
+func is_radially_between(enemy_position, center):
 	var to_enemy = enemy_position - center
 	var enemy_length_squared = to_enemy.length_squared()
 	if enemy_length_squared <= 1.0:
@@ -191,7 +195,7 @@ func switch_target_or_glide(delta):
 	glide(delta)
 
 func glide(delta):
-	var center = player.global_position
+	var center = orbit_center
 	var offset = global_position - center
 	var desired = velocity
 	if offset.length_squared() > 1.0:
@@ -257,11 +261,8 @@ func sample_curve(progress):
 		+ progress * progress * progress * curve_end
 	)
 
-func crosses_left_to_right(from_position, to_position):
-	return (
-		from_position.x < player.global_position.x
-		and to_position.x > player.global_position.x
-	)
+func crosses_left_to_right(from_position, to_position, center):
+	return from_position.x < center.x and to_position.x > center.x
 
 func start_curve():
 	curve_start = global_position
@@ -270,7 +271,7 @@ func start_curve():
 	else:
 		curve_end = global_position + Vector2.UP * 100.0
 	
-	var center = player.global_position
+	var center = lock_center
 	var start_offset = curve_start - center
 	var end_offset = curve_end - center
 	var start_angle = start_offset.angle()

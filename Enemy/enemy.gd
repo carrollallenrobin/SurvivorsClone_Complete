@@ -22,6 +22,7 @@ signal remove_from_array(object)
 
 
 func _ready():
+	add_to_group("enemy")
 	anim.play("walk")
 	hitBox.damage = enemy_damage
 

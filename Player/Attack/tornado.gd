@@ -12,6 +12,7 @@ var orbit_radius = 50.0
 var outward_ratio = 0.20
 var bearing = 0.0
 var radius = 50.0
+var orbit_center = Vector2.ZERO
 
 signal remove_from_array(object)
 
@@ -56,7 +57,8 @@ func _ready():
 			already += 1
 	bearing -= already * TAU / 3.0
 	radius = orbit_radius
-	global_position = player.global_position + Vector2.RIGHT.rotated(bearing) * radius
+	orbit_center = player.global_position
+	global_position = orbit_center + Vector2.RIGHT.rotated(bearing) * radius
 
 	var initial_tween = create_tween().set_parallel(true)
 	initial_tween.tween_property(self, "scale", Vector2(1, 1) * attack_size, 3).set_trans(Tween.TRANS_QUINT).set_ease(Tween.EASE_OUT)
@@ -66,17 +68,13 @@ func _ready():
 	initial_tween.play()
 
 func _physics_process(delta):
-	if not is_instance_valid(player):
-		global_position += Vector2.RIGHT.rotated(bearing - PI / 2.0) * speed * delta
-		return
-
 	var scale = sqrt(1.0 + outward_ratio * outward_ratio)
 	var outward_speed = speed * outward_ratio / scale
 	var tangential_speed = speed / scale
 	var step = tangential_speed / max(radius, 1.0) * delta
 	bearing -= step
 	radius += outward_speed * delta
-	global_position = player.global_position + Vector2.RIGHT.rotated(bearing) * radius
+	global_position = orbit_center + Vector2.RIGHT.rotated(bearing) * radius
 
 func _on_timer_timeout():
 	emit_signal("remove_from_array", self)

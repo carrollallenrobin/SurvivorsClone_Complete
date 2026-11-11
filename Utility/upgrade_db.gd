@@ -7,7 +7,7 @@ const UPGRADES = {
 	"icespear1": {
 		"icon": WEAPON_PATH + "magic_flying_sword.png",
 		"displayname": "Flying Sword",
-		"details": "A magic sword circles the character once while drifting outward, then locks the nearest enemy on the far side, at a counterclockwise angle of at least 90 and less than 180 degrees, and flies a parabola toward it",
+		"details": "A magic sword circles its cast point once while drifting outward, then locks the nearest enemy on the far side of the character, at a counterclockwise angle of at least 90 and less than 180 degrees, and flies a parabola toward it",
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "weapon"
@@ -71,7 +71,7 @@ const UPGRADES = {
 	"tornado1": {
 		"icon": WEAPON_PATH + "tornado.png",
 		"displayname": "Tornado",
-		"details": "A tornado circles the character counterclockwise while drifting outward",
+		"details": "A tornado circles its cast point counterclockwise while drifting outward",
 		"level": "Level: 1",
 		"prerequisite": [],
 		"type": "weapon"

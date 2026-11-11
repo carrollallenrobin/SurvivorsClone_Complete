@@ -8,13 +8,33 @@ extends Node2D
 
 @export var time = 0
 
+var duration := 600
+var spawning := false
+
 signal changetime(time)
+signal stage_elapsed
 
 func _ready():
 	connect("changetime",Callable(player,"change_time"))
 
+func begin_stage(stage_spawns: Array[Spawn_info], stage_duration: int):
+	spawns = stage_spawns
+	duration = stage_duration
+	time = 0
+	spawning = true
+	emit_signal("changetime", time)
+	$Timer.start()
+
 func _on_timer_timeout():
+	if not spawning:
+		return
 	time += 1
+	emit_signal("changetime", time)
+	if time >= duration:
+		spawning = false
+		$Timer.stop()
+		emit_signal("stage_elapsed")
+		return
 	var enemy_spawns = spawns
 	for i in enemy_spawns:
 		if time >= i.time_start and time <= i.time_end:
@@ -29,7 +49,6 @@ func _on_timer_timeout():
 					enemy_spawn.global_position = get_random_position()
 					actors.add_child(enemy_spawn)
 					counter += 1
-	emit_signal("changetime",time)
 
 func get_random_position():
 	var vpr = get_viewport_rect().size * randf_range(1.1,1.4)

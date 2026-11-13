@@ -37,7 +37,7 @@ texture_filter = 2
 position = Vector2(0, -4.15)
 scale = Vector2(0.0787, 0.0787)
 texture = ExtResource("1_jefax")
-hframes = 7
+hframes = 9
 
 [node name="Camera2D" type="Camera2D" parent="."]
 

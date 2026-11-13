@@ -1,0 +1,8 @@
+# Godot 4 editor cache and imported resources (regenerated automatically)
+.godot/
+
+# Export output
+build/
+
+# macOS
+.DS_Store
